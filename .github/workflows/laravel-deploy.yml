@@ -3,13 +3,13 @@ name: Development Deploy
 on:
   workflow_call:
     inputs:
-      deploy_host: 
+      deploy_host:
         required: true
         type: string
       deploy_key:
         required: true
         type: string
-      deploy_user: 
+      deploy_user:
         required: true
         type: string
       deploy_path:
@@ -37,9 +37,17 @@ jobs:
 
           script: |
             cd ${{ inputs.deploy_path }}
+
             cat <<EOF > .env
             ${{ inputs.deploy_env }}
             EOF
-            git pull origin develop
-            composer install --prefer-dist --no-progress --no-suggest --no-interaction
+
+            git pull origin ${{ github.ref_name }}
+
+            if [ "${GITHUB_REF_NAME}" = "develop" ]; then
+              composer install --prefer-dist --no-progress --no-suggest --no-interaction
+            else
+              composer install --prefer-dist --no-progress --no-suggest --no-interaction --no-dev
+            fi
+
             php artisan execute
