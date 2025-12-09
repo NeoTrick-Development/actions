@@ -1,0 +1,36 @@
+name: Development Deploy
+
+on:
+  workflow_call:
+    inputs:
+      path:
+        required: true
+        type: string
+      env:
+        required: true
+        type: string
+
+concurrency:
+  group: deploy-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Deploy Project
+        uses: appleboy/ssh-action@v0.1.10
+        with:
+          host: ${{ secrets.DEVELOP_HOST }}
+          key: ${{ secrets.DEVELOP_KEY }}
+          username: ${{ secrets.DEVELOP_USER }}
+
+          script: |
+            cd ${{ inputs.path }}
+            cat <<EOF > .env
+            ${{ inputs.env }}
+            EOF
+            git pull origin develop
+            composer install --prefer-dist --no-progress --no-suggest --no-interaction
+            php artisan execute
