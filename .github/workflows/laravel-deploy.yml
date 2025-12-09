@@ -42,7 +42,7 @@ jobs:
 
             git pull origin ${{ github.ref_name }}
 
-            if [ "${GITHUB_REF_NAME}" = "develop" ]; then
+            if [ "${{github.ref_name}}" = "develop" ]; then
               composer install --prefer-dist --no-progress --no-suggest --no-interaction
             else
               composer install --prefer-dist --no-progress --no-suggest --no-interaction --no-dev
