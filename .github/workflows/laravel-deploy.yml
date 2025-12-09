@@ -34,20 +34,23 @@ jobs:
           username: ${{ secrets.deploy_user }}
 
           script: |
+            # Navigate to the deployment directory
             cd ${{ inputs.deploy_path }}
 
+            # Set up the environment file
             cat <<EOF > .env
             ${{ inputs.deploy_env }}
             EOF
 
+            # Pull the latest changes from the repository
             git pull origin ${{ github.ref_name }}
 
-            echo ${{ github.ref_name }}
-
+            # Install PHP dependencies
             if [ "${{github.ref_name}}" = "develop" ]; then
               composer install --prefer-dist --no-progress --no-suggest --no-interaction
             else
               composer install --prefer-dist --no-progress --no-suggest --no-interaction --no-dev
             fi
 
+            # Handle Laravel specific tasks
             php artisan execute
