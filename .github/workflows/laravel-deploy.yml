@@ -9,7 +9,7 @@ on:
       deploy_env:
         required: true
         type: string
-    secrets:      
+    secrets:
       deploy_host:
         required: true
       deploy_key:
@@ -29,9 +29,9 @@ jobs:
       - name: Deploy Project
         uses: appleboy/ssh-action@v0.1.10
         with:
-          host: ${{ inputs.deploy_host }}
-          key: ${{ inputs.deploy_key }}
-          username: ${{ inputs.deploy_user }}
+          host: ${{ secrets.deploy_host }}
+          key: ${{ secrets.deploy_key }}
+          username: ${{ secrets.deploy_user }}
 
           script: |
             cd ${{ inputs.deploy_path }}
