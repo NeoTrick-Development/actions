@@ -1,4 +1,4 @@
-name: Development Deploy
+name: Laravel Deploy
 
 on:
   workflow_call:
