@@ -3,19 +3,19 @@ name: Development Deploy
 on:
   workflow_call:
     inputs:
-      host: 
+      deploy_host: 
         required: true
         type: string
-      key:
+      deploy_key:
         required: true
         type: string
-      user: 
+      deploy_user: 
         required: true
         type: string
-      path:
+      deploy_path:
         required: true
         type: string
-      env:
+      deploy_env:
         required: true
         type: string
 
@@ -31,14 +31,14 @@ jobs:
       - name: Deploy Project
         uses: appleboy/ssh-action@v0.1.10
         with:
-          host: ${{ inputs.host }}
-          key: ${{ inputs.key }}
-          username: ${{ inputs.user }}
+          host: ${{ inputs.deploy_host }}
+          key: ${{ inputs.deploy_key }}
+          username: ${{ inputs.deploy_user }}
 
           script: |
-            cd ${{ inputs.path }}
+            cd ${{ inputs.deploy_path }}
             cat <<EOF > .env
-            ${{ inputs.env }}
+            ${{ inputs.deploy_env }}
             EOF
             git pull origin develop
             composer install --prefer-dist --no-progress --no-suggest --no-interaction
