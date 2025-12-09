@@ -3,21 +3,19 @@ name: Development Deploy
 on:
   workflow_call:
     inputs:
-      deploy_host:
-        required: true
-        type: string
-      deploy_key:
-        required: true
-        type: string
-      deploy_user:
-        required: true
-        type: string
       deploy_path:
         required: true
         type: string
       deploy_env:
         required: true
         type: string
+    secrets:      
+      deploy_host:
+        required: true
+      deploy_key:
+        required: true
+      deploy_user:
+        required: true
 
 concurrency:
   group: deploy-${{ github.ref }}
