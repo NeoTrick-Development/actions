@@ -2,19 +2,16 @@ name: Development Deploy
 
 on:
   workflow_call:
-    inputs:
-      deploy_path:
-        required: true
-        type: string
-      deploy_env:
-        required: true
-        type: string
     secrets:
       deploy_host:
         required: true
       deploy_key:
         required: true
       deploy_user:
+        required: true
+      deploy_path:
+        required: true
+      deploy_env:
         required: true
 
 concurrency:
