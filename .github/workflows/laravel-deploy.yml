@@ -32,11 +32,11 @@ jobs:
 
           script: |
             # Navigate to the deployment directory
-            cd ${{ inputs.deploy_path }}
+            cd ${{ secrets.deploy_path }}
 
             # Set up the environment file
             cat <<EOF > .env
-            ${{ inputs.deploy_env }}
+            ${{ secrets.deploy_env }}
             EOF
 
             # Pull the latest changes from the repository
