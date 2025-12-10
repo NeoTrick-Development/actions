@@ -70,9 +70,9 @@ jobs:
           else
             echo "Installing dependencies..."
             if [ "${{github.ref_name}}" = "develop" ]; then
-              bun install
+              bun install --no-frozen-lockfile
             else
-              BUN_ENV=production bun install
+              BUN_ENV=production bun install --no-frozen-lockfile
             fi
           fi
 
@@ -106,9 +106,9 @@ jobs:
 
             # Install production dependencies
             if [ "${{github.ref_name}}" = "develop" ]; then
-              bun install
+              bun install --no-frozen-lockfile
             else
-              BUN_ENV=production bun install
+              BUN_ENV=production bun install --no-frozen-lockfile
             fi
 
             # Restart or start the PM2 process
