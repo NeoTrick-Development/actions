@@ -37,7 +37,7 @@ jobs:
         run: |
           sed "s/{{APP_NAME}}/${{ env.REPO_NAME }}/g; s/{{APP_PORT}}/${{ secrets.pm2_port }}/g; s/{{APP_TYPE}}/npm/g; s#{{APP_PATH}}#${{ secrets.deploy_path }}#g" pm2-template/configs/pm2/npm.template.js > ${{ env.REPO_NAME }}.config.js
 
-      - name: Upload PM2 config file for verification
+      - name: Upload PM2 config file
         uses: appleboy/scp-action@v0.1.7
         with:
           host: ${{ secrets.deploy_host }}
