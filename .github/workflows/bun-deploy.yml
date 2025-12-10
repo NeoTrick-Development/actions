@@ -70,8 +70,10 @@ jobs:
           else
             echo "Installing dependencies..."
             if [ "${{github.ref_name}}" = "develop" ]; then
+              npm install --prefer-offline --no-audit --progress=false
               bun install --no-frozen-lockfile
             else
+              npm install --omit=dev --prefer-offline --no-audit --progress=false
               BUN_ENV=production bun install --no-frozen-lockfile
             fi
           fi
@@ -83,7 +85,15 @@ jobs:
           echo ".env file created."
 
       - name: Build Next.js (no lint)
-        run: bun run build -- --no-lint
+        run: |
+          NEXT_VERSION=$(npx next --version)
+          MAJOR=$(echo $NEXT_VERSION | cut -d. -f1)
+
+          if [ "$MAJOR" -lt 13 ]; then
+            bun run build -- --no-lint
+          else
+            bun run build
+          fi
 
       - name: Upload build files
         uses: appleboy/scp-action@v0.1.7
@@ -106,8 +116,10 @@ jobs:
 
             # Install production dependencies
             if [ "${{github.ref_name}}" = "develop" ]; then
+              npm install --prefer-offline --no-audit --progress=false
               bun install --no-frozen-lockfile
             else
+              npm install --omit=dev --prefer-offline --no-audit --progress=false
               BUN_ENV=production bun install --no-frozen-lockfile
             fi
 
