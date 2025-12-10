@@ -84,7 +84,15 @@ jobs:
           echo ".env file created."
 
       - name: Build Next.js (no lint)
-        run: npm run build -- --no-lint
+        run: |
+          NEXT_VERSION=$(npx next --version)
+          MAJOR=$(echo $NEXT_VERSION | cut -d. -f1)
+
+          if [ "$MAJOR" -lt 13 ]; then
+            npm run build -- --no-lint
+          else
+            npm run build
+          fi
 
       - name: Upload build files
         uses: appleboy/scp-action@v0.1.7
