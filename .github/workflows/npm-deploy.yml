@@ -104,8 +104,13 @@ jobs:
           script: |
             # Navigate to the deployment directory
             cd ${{ secrets.deploy_path }}
+
             # Install production dependencies
-            npm install --omit=dev --prefer-offline --no-audit --progress=false
+            if [ "${{github.ref_name}}" = "develop" ]; then
+              npm install --prefer-offline --no-audit --progress=false
+            else
+              npm install --omit=dev --prefer-offline --no-audit --progress=false
+            fi
 
             # Restart or start the PM2 process
             pm2 reload ${{ env.PM2_CONFIG_PATH }}/${{ env.REPO_NAME }}.config.js || pm2 start ${{ env.PM2_CONFIG_PATH }}/${{ env.REPO_NAME }}.config.js
