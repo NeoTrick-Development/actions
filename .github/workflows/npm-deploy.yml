@@ -97,3 +97,4 @@ jobs:
           key: ${{ secrets.deploy_key }}
           script: |
             pm2 reload ${{ env.PM2_CONFIG_PATH }} || pm2 start ${{ env.PM2_CONFIG_PATH }}
+            pm2 save
