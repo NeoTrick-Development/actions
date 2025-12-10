@@ -102,6 +102,6 @@ jobs:
           username: ${{ secrets.deploy_user }}
           key: ${{ secrets.deploy_key }}
           script: |
-            pm2 reload ${{ env.PM2_CONFIG_PATH }} || pm2 start ${{ env.PM2_CONFIG_PATH }}
+            pm2 reload ${{ env.PM2_CONFIG_PATH }}/${{ env.REPO_NAME }}.config.js || pm2 start ${{ env.PM2_CONFIG_PATH }}/${{ env.REPO_NAME }}.config.js
             pm2 save
 
