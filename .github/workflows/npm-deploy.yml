@@ -45,12 +45,6 @@ jobs:
           key: ${{ secrets.deploy_key }}
           source: "${{ env.REPO_NAME }}.config.js"
           target: "${{ env.PM2_CONFIG_PATH }}"
-      
-      - name: Create .env file from variable
-        run: |
-          echo "Creating .env file from variable..."
-          echo "${{ secrets.deploy_env }}" > .env
-          echo ".env file created."
 
       - name: Checkout code
         uses: actions/checkout@v4
@@ -82,6 +76,12 @@ jobs:
               npm install --omit=dev --prefer-offline --no-audit --progress=false
             fi
           fi
+      
+      - name: Create .env file from variable
+        run: |
+          echo "Creating .env file from variable..."
+          echo "${{ secrets.deploy_env }}" > .env
+          echo ".env file created."
 
       - name: Build Next.js (no lint)
         run: npm run build -- --no-lint
