@@ -76,7 +76,7 @@ jobs:
               npm install --omit=dev --prefer-offline --no-audit --progress=false
             fi
           fi
-      
+
       - name: Create .env file from variable
         run: |
           echo "Creating .env file from variable..."
@@ -95,13 +95,18 @@ jobs:
           source: ".next,package.json,public,next.config.js"
           target: ${{ secrets.deploy_path }}
 
-      - name: Restart PM2 process
+      - name: Install NPM + Restart PM2 process
         uses: appleboy/ssh-action@v0.1.10
         with:
           host: ${{ secrets.deploy_host }}
           username: ${{ secrets.deploy_user }}
           key: ${{ secrets.deploy_key }}
           script: |
+            # Navigate to the deployment directory
+            cd ${{ secrets.deploy_path }}
+            # Install production dependencies
+            npm install --omit=dev --prefer-offline --no-audit --progress=false
+
+            # Restart or start the PM2 process
             pm2 reload ${{ env.PM2_CONFIG_PATH }}/${{ env.REPO_NAME }}.config.js || pm2 start ${{ env.PM2_CONFIG_PATH }}/${{ env.REPO_NAME }}.config.js
             pm2 save
-
