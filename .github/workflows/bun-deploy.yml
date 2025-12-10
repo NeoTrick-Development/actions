@@ -106,9 +106,9 @@ jobs:
 
             # Install production dependencies
             if [ "${{github.ref_name}}" = "develop" ]; then
-              npm install --prefer-offline --no-audit --progress=false
+              bun install --frozen-lockfile
             else
-              npm install --omit=dev --prefer-offline --no-audit --progress=false
+              BUN_ENV=production bun install --frozen-lockfile
             fi
 
             # Restart or start the PM2 process
