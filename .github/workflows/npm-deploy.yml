@@ -24,7 +24,7 @@ jobs:
       NODE_OPTIONS: "--max_old_space_size=512"
       NEXT_TELEMETRY_DISABLED: "1"
       REPO_NAME: ${{ github.event.repository.name }}
-      PM2_CONFIG_PATH: "/var/www/configs/${{ github.event.repository.name }}.config.js"
+      PM2_CONFIG_PATH: "/var/www/configs"
 
     steps:
       - name: Checkout PM2 template repo
