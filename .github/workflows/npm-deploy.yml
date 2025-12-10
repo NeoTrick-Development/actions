@@ -31,11 +31,11 @@ jobs:
         uses: actions/checkout@v4
         with:
           repository: NeoTrick-Development/actions
-          path: configs
+          path: pm2-template
 
       - name: Generate PM2 config file
         run: |
-          sed "s/{{APP_NAME}}/${{ env.REPO_NAME }}/g; s/{{APP_PORT}}/${{ secrets.pm2_port }}/g; s/{{APP_TYPE}}/npm/g; s#{{APP_PATH}}#${{ secrets.deploy_path }}#g" configs/pm2/npm.template.js > ${{ env.REPO_NAME }}.config.js
+          sed "s/{{APP_NAME}}/${{ env.REPO_NAME }}/g; s/{{APP_PORT}}/${{ secrets.pm2_port }}/g; s/{{APP_TYPE}}/npm/g; s#{{APP_PATH}}#${{ secrets.deploy_path }}#g" pm2-template/configs/pm2/npm.template.js > ${{ env.REPO_NAME }}.config.js
 
       - name: Upload PM2 config file for verification
         uses: appleboy/scp-action@v0.1.7
