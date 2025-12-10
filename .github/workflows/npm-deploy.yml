@@ -27,58 +27,15 @@ jobs:
       PM2_CONFIG_PATH: "/var/www/configs/${{ github.event.repository.name }}.config.js"
 
     steps:
-      - name: Checkout code
+      - name: Checkout PM2 template repo
         uses: actions/checkout@v4
-
-      - name: Setup Node.js
-        uses: actions/setup-node@v4
         with:
-          node-version: 20
-          cache: "npm"
-
-      - name: Restore node_modules cache
-        uses: actions/cache@v4
-        id: node-modules-cache
-        with:
-          path: node_modules
-          key: ${{ runner.os }}-modules-${{ hashFiles('**/package-lock.json') }}
-          restore-keys: |
-            ${{ runner.os }}-modules-
-
-      - name: Install dependencies (with cache optimization)
-        run: |
-          if [ -d "node_modules" ]; then
-            echo "Using cached node_modules"
-          else
-            echo "Installing dependencies..."
-            if [ "${{github.ref_name}}" = "develop" ]; then
-              npm install --prefer-offline --no-audit --progress=false
-            else
-              npm install --omit=dev --prefer-offline --no-audit --progress=false
-            fi
-          fi
-
-      - name: Create .env file from variable
-        run: |
-          echo "Creating .env file from variable..."
-          echo "${{ secrets.deploy_env }}" > .env
-          echo ".env file created."
-
-      - name: Build Next.js (no lint)
-        run: npm run build -- --no-lint
-
-      - name: Upload build files
-        uses: appleboy/scp-action@v0.1.7
-        with:
-          host: ${{ secrets.deploy_host }}
-          username: ${{ secrets.deploy_user }}
-          key: ${{ secrets.deploy_key }}
-          source: ".next,package.json,public,next.config.js"
-          target: ${{ secrets.deploy_path }}
+          repository: NeoTrick-Development/actions
+          path: configs
 
       - name: Generate PM2 config file
         run: |
-            sed "s/{{APP_NAME}}/${{ env.REPO_NAME }}/g; s/{{APP_PORT}}/${{ secrets.pm2_port }}/g; s/{{APP_TYPE}}/npm/g; s#{{APP_PATH}}#${{ secrets.deploy_path }}#g" configs/pm2/npm.template.js > ${{ env.REPO_NAME }}.config.js
+          sed "s/{{APP_NAME}}/${{ env.REPO_NAME }}/g; s/{{APP_PORT}}/${{ secrets.pm2_port }}/g; s/{{APP_TYPE}}/npm/g; s#{{APP_PATH}}#${{ secrets.deploy_path }}#g" configs/pm2/npm.template.js > ${{ env.REPO_NAME }}.config.js
 
       - name: Upload PM2 config file for verification
         uses: appleboy/scp-action@v0.1.7
@@ -88,13 +45,3 @@ jobs:
           key: ${{ secrets.deploy_key }}
           source: "${{ env.REPO_NAME }}.config.js"
           target: "${{ env.PM2_CONFIG_PATH }}"
-
-      - name: Restart PM2 process
-        uses: appleboy/ssh-action@v0.1.10
-        with:
-          host: ${{ secrets.deploy_host }}
-          username: ${{ secrets.deploy_user }}
-          key: ${{ secrets.deploy_key }}
-          script: |
-            pm2 reload ${{ env.PM2_CONFIG_PATH }} || pm2 start ${{ env.PM2_CONFIG_PATH }}
-            pm2 save
