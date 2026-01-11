@@ -118,6 +118,7 @@ jobs:
           script: |
             # Navigate to the deployment directory
             cd ${{ secrets.deploy_path }}
+            chown -R $USER:$USER .
 
             # Install production dependencies
             if [ "${{github.ref_name}}" = "develop" ]; then
