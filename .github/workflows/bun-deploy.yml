@@ -105,7 +105,7 @@ jobs:
           username: ${{ secrets.deploy_user }}
           key: ${{ secrets.deploy_key }}
           port: ${{ secrets.deploy_port || '22' }}
-          source: ".next,package.json,public,next.config.mjs"
+          source: ".next,package.json,public,next.config.mjs,app,components,pages"
           target: ${{ secrets.deploy_path }}
 
       - name: Install Bun + Restart PM2 process
