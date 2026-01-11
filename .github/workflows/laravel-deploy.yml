@@ -13,6 +13,8 @@ on:
         required: true
       deploy_env:
         required: true
+      deploy_port:
+        required: false
 
 concurrency:
   group: deploy-${{ github.ref }}
@@ -27,8 +29,9 @@ jobs:
         uses: appleboy/ssh-action@v0.1.10
         with:
           host: ${{ secrets.deploy_host }}
-          key: ${{ secrets.deploy_key }}
           username: ${{ secrets.deploy_user }}
+          key: ${{ secrets.deploy_key }}
+          port: ${{ secrets.deploy_port || '22' }}
 
           script: |
             # Navigate to the deployment directory
