@@ -73,11 +73,9 @@ jobs:
           else
             echo "Installing dependencies..."
             if [ "${{github.ref_name}}" = "develop" ]; then
-              npm install --prefer-offline --no-audit --progress=false
-              bun install --no-frozen-lockfile
+              bun install
             else
-              npm install --omit=dev --prefer-offline --no-audit --progress=false
-              BUN_ENV=production bun install --no-frozen-lockfile
+              BUN_ENV=production bun install
             fi
           fi
 
@@ -105,7 +103,7 @@ jobs:
           username: ${{ secrets.deploy_user }}
           key: ${{ secrets.deploy_key }}
           port: ${{ secrets.deploy_port || '22' }}
-          source: ".next,package.json,public,next.config.mjs"
+          source: ".next,package.json,public"
           target: ${{ secrets.deploy_path }}
 
       - name: Install Bun + Restart PM2 process
@@ -118,15 +116,12 @@ jobs:
           script: |
             # Navigate to the deployment directory
             cd ${{ secrets.deploy_path }}
-            chown -R $USER:$USER .
 
             # Install production dependencies
             if [ "${{github.ref_name}}" = "develop" ]; then
-              npm install --prefer-offline --no-audit --progress=false
-              bun install --no-frozen-lockfile
+              bun install
             else
-              npm install --omit=dev --prefer-offline --no-audit --progress=false
-              BUN_ENV=production bun install --no-frozen-lockfile
+              BUN_ENV=production bun install 
             fi
 
             # Restart or start the PM2 process
