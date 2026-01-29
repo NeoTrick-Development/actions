@@ -106,6 +106,7 @@ jobs:
           port: ${{ secrets.deploy_port || '22' }}
           source: ".next,package.json,public,next.config.js"
           target: ${{ secrets.deploy_path }}
+          debug: true
 
       - name: Install NPM + Restart PM2 process
         uses: appleboy/ssh-action@v0.1.10

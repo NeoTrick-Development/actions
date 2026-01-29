@@ -48,6 +48,7 @@ jobs:
           port: ${{ secrets.deploy_port || '22' }}
           source: "${{ env.REPO_NAME }}.config.js"
           target: "${{ env.PM2_CONFIG_PATH }}"
+          debug: true
 
       - name: Checkout code
         uses: actions/checkout@v4
