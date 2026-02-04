@@ -53,6 +53,14 @@ jobs:
             ${{ secrets.deploy_env }}
             EOF
 
+            # Ensure the database exists
+            DB_NAME=$(grep DB_DATABASE .env | cut -d'=' -f2)
+            DB_USER=$(grep DB_USERNAME .env | cut -d'=' -f2)
+            DB_PASS=$(grep DB_PASSWORD .env | cut -d'=' -f2)
+            
+            echo "Checking if database $DB_NAME exists..."
+            mysql -u$DB_USER -p$DB_PASS -e "CREATE DATABASE IF NOT EXISTS $DB_NAME CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;"
+
             # Pull the latest changes from the repository
             git pull origin ${{ github.ref_name }}
 
