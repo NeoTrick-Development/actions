@@ -71,5 +71,12 @@ jobs:
               composer install --prefer-dist --no-progress --no-suggest --no-interaction --no-dev
             fi
 
+            # Check if the 'executors' table exists and run migrations if it does not
+            TABLE_EXISTS=$(mysql -u$DB_USER -p$DB_PASS $DB_NAME -e "SHOW TABLES LIKE 'executors';" | grep "executors")
+            if [ -z "$TABLE_EXISTS" ]; then
+                echo "Table 'executors' does not exist. Running migrations..."
+                php artisan migrate --force
+            fi
+
             # Handle Laravel specific tasks
             php artisan execute
