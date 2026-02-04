@@ -25,6 +25,11 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
+      - name: Trust Server
+        run: |
+          mkdir -p ~/.ssh
+          ssh-keyscan -H ${{ secrets.deploy_host }} >> ~/.ssh/known_hosts
+
       - name: Deploy Project
         uses: appleboy/ssh-action@v0.1.10
         with:
