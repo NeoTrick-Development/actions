@@ -34,6 +34,12 @@ jobs:
           port: ${{ secrets.deploy_port || '22' }}
 
           script: |
+            # Check if the deployment directory exists; if not, clone the repository
+            if [ ! -d "${{ secrets.deploy_path }}/.git" ]; then
+              echo "Directory does not exist. Starting initial clone..."
+              git clone -b ${{ github.ref_name }} https://github.com/${{ github.repository }}.git ${{ secrets.deploy_path }}
+            fi
+
             # Navigate to the deployment directory
             cd ${{ secrets.deploy_path }}
 
