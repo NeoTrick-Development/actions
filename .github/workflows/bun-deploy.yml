@@ -74,9 +74,9 @@ jobs:
           else
             echo "Installing dependencies..."
             if [ "${{github.ref_name}}" = "develop" ]; then
-              npm install --prefer-offline --no-audit --progress=false
+              bun install --frozen-lockfile
             else
-              npm install --omit=dev --prefer-offline --no-audit --progress=false
+              bun install --production --frozen-lockfile
             fi
           fi
 
@@ -88,14 +88,7 @@ jobs:
 
       - name: Build Next.js (no lint)
         run: |
-          NEXT_VERSION=$(npx next --version)
-          MAJOR=$(echo $NEXT_VERSION | cut -d. -f1)
-
-          if [ "$MAJOR" -lt 13 ]; then
-            npm run build -- --no-lint
-          else
-            npm run build
-          fi
+          bun run build
 
       - name: Upload build files
         uses: appleboy/scp-action@v0.1.7
@@ -120,9 +113,9 @@ jobs:
 
             # Install production dependencies
             if [ "${{github.ref_name}}" = "develop" ]; then
-              npm install --prefer-offline --no-audit --progress=false
+              bun install
             else
-              npm install --omit=dev --prefer-offline --no-audit --progress=false
+              bun install --production
             fi
 
             # Restart or start the PM2 process
