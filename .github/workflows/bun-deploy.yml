@@ -73,11 +73,12 @@ jobs:
             echo "Using cached node_modules"
           else
             echo "Installing dependencies..."
-            if [ "${{github.ref_name}}" = "develop" ]; then
-              bun install
-            else
-              bun install --production
-            fi
+            bun install
+            #if [ "${{github.ref_name}}" = "develop" ]; then
+            #  bun install
+            #else
+            #  bun install --production
+            #fi
           fi
 
       - name: Create .env file from variable
@@ -112,11 +113,12 @@ jobs:
             cd ${{ secrets.deploy_path }}
 
             # Install production dependencies
-            if [ "${{github.ref_name}}" = "develop" ]; then
-              bun install
-            else
-              bun install --production
-            fi
+            bun install
+            #if [ "${{github.ref_name}}" = "develop" ]; then
+            #  bun install
+            #else
+            #  bun install --production
+            #fi
 
             # Restart or start the PM2 process
             pm2 reload ${{ env.PM2_CONFIG_PATH }}/${{ env.REPO_NAME }}.config.js || pm2 start ${{ env.PM2_CONFIG_PATH }}/${{ env.REPO_NAME }}.config.js
