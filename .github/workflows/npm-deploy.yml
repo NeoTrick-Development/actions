@@ -104,7 +104,7 @@ jobs:
           username: ${{ secrets.deploy_user }}
           key: ${{ secrets.deploy_key }}
           port: ${{ secrets.deploy_port || '22' }}
-          source: ".next,package.json,public,next.config.js"
+          source: ".next,package.json,public,next.config.js,.env"
           target: ${{ secrets.deploy_path }}
           debug: true
 
