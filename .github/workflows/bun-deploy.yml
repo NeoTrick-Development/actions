@@ -17,7 +17,9 @@ on:
         required: false
       pm2_port:
         required: true
-
+      node_version:
+        required: false
+      
 jobs:
   deploy:
     runs-on: ubuntu-latest
@@ -52,6 +54,12 @@ jobs:
 
       - name: Checkout code
         uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: ${{ secrets.node_version || '20' }}
+          cache: "npm"
 
       - name: Setup Bun
         uses: oven-sh/setup-bun@v2
